@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: #ffffff;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      gap: 1.5rem;
+    }
+
+    /* Colour band — fixed height so digits never escape */
+    .color-band {
+      width: 100%;
+      max-width: 960px;
+      border-radius: 28px;
+      background: #1a7a4a;
+      transition: background 0.7s ease;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.13);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 3rem;
+      overflow: hidden;   /* belt-and-braces: clips anything that tries to escape */
+    }
+
+    .label-top {
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1rem;
+    }
+
+    /* Digits: fluid size capped so they always fit inside the band */
+    .time-display {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(64px, 13vw, 160px);
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      white-space: nowrap;      /* stops wrapping */
+      text-shadow:
+        0 2px 0 rgba(0,0,0,0.25),
+        0 4px 24px rgba(0,0,0,0.2);
+    }
+
+    .status-label {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 1rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+      min-height: 1.4em;
+    }
+
+    /* Controls card */
+    .controls-card {
+      width: 100%;
+      max-width: 960px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .inputs {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .inp-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .inp-group label {
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .inp-group input[type="number"] {
+      width: 80px;
+      font-size: 28px;
+      font-weight: 400;
+      font-family: 'DM Mono', monospace;
+      text-align: center;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px 4px;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s;
+      -moz-appearance: textfield;
+    }
+
+    .inp-group input[type="number"]::-webkit-outer-spin-button,
+    .inp-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .inp-group input[type="number"]:focus {
+      border-color: #1a7a4a;
+      background: #fff;
+    }
+
+    .sep {
+      font-size: 28px;
+      font-weight: 300;
+      font-family: 'DM Mono', monospace;
+      color: #d1d5db;
+      padding-bottom: 8px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      padding: 11px 28px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn:hover { background: #f3f4f6; }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: #1a7a4a;
+      color: #fff;
+      border-color: #1a7a4a;
+    }
+    .btn-primary:hover { background: #155f3a; border-color: #155f3a; }
+
+    .volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .volume-icon { font-size: 15px; }
+
+    input[type="range"] {
+      width: 110px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: #e5e7eb;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #1a7a4a;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    input[type="range"]::-moz-range-thumb {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #1a7a4a;
+      border: none;
+      cursor: pointer;
+    }
+
+    .volume-pct {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: #9ca3af;
+      width: 32px;
+    }
+
+    .alarm-banner {
+      display: none;
+      width: 100%;
+      max-width: 960px;
+      padding: 16px 24px;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 14px;
+      font-size: 16px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 2px;
+      color: #991b1b;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .pulse { animation: pulse 1s ease infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="color-band" id="color-band">
+    <div class="label-top">countdown timer</div>
+    <div class="time-display" id="display">00:00:00</div>
+    <div class="status-label" id="status">set a time and press start</div>
+  </div>
+
+  <div class="controls-card">
+    <div class="inputs" id="input-row">
+      <div class="inp-group">
+        <label>hr</label>
+        <input type="number" id="inp-h" min="0" max="23" value="0">
+      </div>
+      <div class="sep">:</div>
+      <div class="inp-group">
+        <label>min</label>
+        <input type="number" id="inp-m" min="0" max="59" value="5">
+      </div>
+      <div class="sep">:</div>
+      <div class="inp-group">
+        <label>sec</label>
+        <input type="number" id="inp-s" min="0" max="59" value="0">
+      </div>
+    </div>
+
+    <div class="btns">
+      <button class="btn btn-primary" id="btn-start">Start</button>
+      <button class="btn" id="btn-reset">Reset</button>
+    </div>
+
+    <div class="volume-wrap">
+      <span class="volume-icon">🔔</span>
+      <input type="range" id="vol-slider" min="0" max="100">
+      <span class="volume-pct" id="vol-pct"></span>
+    </div>
+  </div>
+
+  <div class="alarm-banner" id="alarm-banner">— time's up —</div>
+
+<script>
+  // ============================================================
+  //  SOUND CONFIGURATION
+  //  Set file paths to your local audio files.
+  //  Use just the filename (e.g. "alarm.mp3") if it's in the
+  //  same folder as this HTML, or provide a full path.
+  //  Leave as null to use the built-in beep for the alarm.
+  // ============================================================
+  const ALARM_SOUND      = "../audio/bell.mp3";   // e.g. "alarm.mp3"
+  const EASTER_EGG_SOUND = "../audio/7minutes2.mp3";   // plays when timer hits exactly 7:00
+
+  // Default volume: 0 = silent, 100 = full. Slider starts here.
+  const DEFAULT_VOLUME = 80;
+  // ============================================================
+
+  let totalSecs = 0, remaining = 0, interval = null, running = false;
+  let alarmCtx = null, alarmInterval = null;
+  let eggPlayed = false;
+
+  const display   = document.getElementById('display');
+  const status    = document.getElementById('status');
+  const band      = document.getElementById('color-band');
+  const banner    = document.getElementById('alarm-banner');
+  const btnStart  = document.getElementById('btn-start');
+  const btnReset  = document.getElementById('btn-reset');
+  const inpH      = document.getElementById('inp-h');
+  const inpM      = document.getElementById('inp-m');
+  const inpS      = document.getElementById('inp-s');
+  const inputRow  = document.getElementById('input-row');
+  const volSlider = document.getElementById('vol-slider');
+  const volPct    = document.getElementById('vol-pct');
+
+  volSlider.value = DEFAULT_VOLUME;
+  volPct.textContent = DEFAULT_VOLUME + '%';
+  volSlider.addEventListener('input', () => { volPct.textContent = volSlider.value + '%'; });
+
+  function getVolume() { return volSlider.value / 100; }
+
+  function playAudioFile(path) {
+    const audio = new Audio(path);
+    audio.volume = getVolume();
+    audio.play().catch(() => {});
+  }
+
+  const STOPS = [
+    { at: 1.00, bg: '#1a7a4a' },
+    { at: 0.55, bg: '#4a9a2a' },
+    { at: 0.30, bg: '#c8820a' },
+    { at: 0.12, bg: '#b82020' },
+    { at: 0.00, bg: '#7a0e0e' },
+  ];
+
+  function lerpHex(a, b, t) {
+    const h = s => parseInt(s, 16);
+    const r = c => c.slice(1).match(/.{2}/g).map(h);
+    const [ar,ag,ab] = r(a), [br,bg2,bb] = r(b);
+    const l = (x,y) => Math.round(x+(y-x)*t).toString(16).padStart(2,'0');
+    return '#'+l(ar,br)+l(ag,bg2)+l(ab,bb);
+  }
+
+  function getColor(ratio) {
+    for (let i = 0; i < STOPS.length - 1; i++) {
+      const a = STOPS[i], b = STOPS[i+1];
+      if (ratio <= a.at && ratio >= b.at) {
+        const t = (a.at - ratio) / (a.at - b.at);
+        return lerpHex(a.bg, b.bg, t);
+      }
+    }
+    return STOPS[STOPS.length-1].bg;
+  }
+
+  function fmt(s) {
+    const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+    return [h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+  }
+
+  function updateDisplay() {
+    display.textContent = fmt(remaining);
+    const ratio = totalSecs > 0 ? remaining / totalSecs : 1;
+    band.style.background = getColor(ratio);
+    display.classList.toggle('pulse', remaining <= 10 && remaining > 0);
+
+    if (remaining === 420 && !eggPlayed && EASTER_EGG_SOUND) {
+      eggPlayed = true;
+      playAudioFile(EASTER_EGG_SOUND);
+    }
+  }
+
+  function playAlarmSound() {
+    if (ALARM_SOUND) { playAudioFile(ALARM_SOUND); return; }
+    try { alarmCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) { return; }
+    const masterGain = alarmCtx.createGain();
+    masterGain.gain.value = getVolume();
+    masterGain.connect(alarmCtx.destination);
+    let beat = 0;
+    function beep() {
+      const osc = alarmCtx.createOscillator();
+      const gain = alarmCtx.createGain();
+      osc.connect(gain); gain.connect(masterGain);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, alarmCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, alarmCtx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.5, alarmCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, alarmCtx.currentTime + 0.4);
+      osc.start(); osc.stop(alarmCtx.currentTime + 0.4);
+      if (++beat >= 5) { clearInterval(alarmInterval); alarmInterval = null; }
+    }
+    beep();
+    alarmInterval = setInterval(beep, 500);
+  }
+
+  function stopAlarm() {
+    if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
+    if (alarmCtx) { alarmCtx.close(); alarmCtx = null; }
+  }
+
+  function start() {
+    if (running) {
+      clearInterval(interval); interval = null; running = false;
+      btnStart.textContent = 'Resume';
+      status.textContent = 'paused';
+      return;
+    }
+    if (remaining === 0) {
+      const h = parseInt(inpH.value)||0, m = parseInt(inpM.value)||0, s = parseInt(inpS.value)||0;
+      totalSecs = h*3600 + m*60 + s;
+      if (!totalSecs) return;
+      remaining = totalSecs;
+      eggPlayed = false;
+    }
+    inputRow.style.opacity = '0.3';
+    inputRow.style.pointerEvents = 'none';
+    banner.style.display = 'none';
+    running = true;
+    btnStart.textContent = 'Pause';
+    status.textContent = 'running...';
+    updateDisplay();
+
+    interval = setInterval(() => {
+      remaining--;
+      updateDisplay();
+      if (remaining <= 0) {
+        clearInterval(interval); interval = null; running = false;
+        display.textContent = '00:00:00';
+        display.classList.remove('pulse');
+        band.style.background = '#7a0e0e';
+        status.textContent = 'done';
+        banner.style.display = 'block';
+        btnStart.textContent = 'Start';
+        inputRow.style.opacity = '1';
+        inputRow.style.pointerEvents = 'auto';
+        playAlarmSound();
+      }
+    }, 1000);
+  }
+
+  function reset() {
+    clearInterval(interval); interval = null;
+    stopAlarm();
+    running = false; remaining = 0; totalSecs = 0; eggPlayed = false;
+    display.textContent = '00:00:00';
+    display.classList.remove('pulse');
+    band.style.background = '#1a7a4a';
+    status.textContent = 'set a time and press start';
+    banner.style.display = 'none';
+    btnStart.textContent = 'Start';
+    inputRow.style.opacity = '1';
+    inputRow.style.pointerEvents = 'auto';
+  }
+
+  btnStart.addEventListener('click', start);
+  btnReset.addEventListener('click', reset);
+</script>
+</body>
+</html>

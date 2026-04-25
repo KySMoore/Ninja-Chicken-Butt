@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja Bucks - Code Ninjas</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dojo-red: #E63946;
+      --dojo-black: #1a1a1a;
+      --dojo-gold: #FFD93D;
+      --dojo-gold-dark: #c9a500;
+      --dojo-white: #ffffff;
+      --text-muted: #666;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #f0f0f0;
+      background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      color: var(--dojo-black);
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--dojo-black);
+      color: white;
+      border-bottom: 5px solid var(--dojo-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 15px 30px;
+      border-radius: 2px;
+    }
+
+    .logo { height: 50px; }
+
+    .nav-btn {
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      padding: 8px 20px;
+      border-radius: 0;
+      transition: transform 0.15s;
+    }
+    .nav-btn:hover { transform: scale(1.05); }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border: 4px solid var(--dojo-black);
+      border-radius: 0;
+      box-shadow: 10px 10px 0px var(--dojo-red);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .card h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.2rem;
+      color: var(--dojo-red);
+      margin-bottom: 8px;
+    }
+
+    .card .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 1rem;
+    }
+
+    /* ── Gold title card ── */
+    .card-gold {
+      box-shadow: 10px 10px 0px var(--dojo-gold-dark);
+      border-color: var(--dojo-gold-dark);
+    }
+    .card-gold h2 { color: #a07800; }
+
+    /* ── Search ── */
+    .search-wrap {
+      position: relative;
+      max-width: 420px;
+      margin-bottom: 20px;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 1.1rem;
+    }
+    #search {
+      width: 100%;
+      padding: 10px 14px 10px 40px;
+      border: 3px solid var(--dojo-black);
+      border-radius: 0;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #search:focus { border-color: var(--dojo-red); }
+
+    /* ── Sort buttons ── */
+    .sort-btns { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .sort-btn {
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      padding: 6px 18px;
+      border: 3px solid var(--dojo-black);
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sort-btn:hover, .sort-btn.active {
+      background: var(--dojo-black);
+      color: white;
+    }
+
+    /* ── Registry table ── */
+    .registry-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .registry-table thead tr {
+      background: var(--dojo-black);
+      color: white;
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+    }
+    .registry-table th { padding: 12px 16px; text-align: left; }
+    .registry-table tbody tr {
+      border-bottom: 2px solid #eee;
+      transition: background 0.15s;
+    }
+    .registry-table tbody tr:hover { background: #fff8e1; }
+    .registry-table td { padding: 10px 16px; }
+
+    .rank-cell {
+      font-family: 'Bangers', cursive;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      width: 50px;
+    }
+    .rank-1 { color: #FFD700; }
+    .rank-2 { color: #C0C0C0; }
+    .rank-3 { color: #CD7F32; }
+
+    .name-cell { font-weight: 700; font-size: 0.95rem; }
+
+    .balance-cell {
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      color: var(--dojo-red);
+    }
+
+    .status-badge {
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    /* ── Earn table ── */
+    .earn-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .earn-table thead tr {
+      background: var(--dojo-black);
+      color: white;
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+    }
+    .earn-table th { padding: 12px 16px; text-align: left; }
+    .earn-table td { padding: 12px 16px; border-bottom: 2px solid #eee; vertical-align: top; }
+    .earn-table tr:last-child td { border-bottom: none; }
+    .earn-table td:last-child {
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      color: var(--dojo-red);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .earn-table ul { margin: 0; padding-left: 18px; }
+    .earn-table li { margin-bottom: 4px; }
+
+    /* ── Spotlight / Top Earners ── */
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .top-card {
+      border: 3px solid var(--dojo-black);
+      padding: 14px 10px;
+      text-align: center;
+      background: #fffef5;
+      position: relative;
+    }
+    .top-card .top-rank {
+      font-family: 'Bangers', cursive;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .top-card .top-name { font-weight: 700; font-size: 0.82rem; margin: 6px 0 4px; }
+    .top-card .top-bucks {
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      color: var(--dojo-red);
+    }
+    .top-card .top-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Counter ── */
+    #result-count {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* ── Accordion ── */
+    .accordion-toggle {
+      width: 100%;
+      background: var(--dojo-black);
+      color: white;
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      padding: 14px 24px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+    }
+    .accordion-toggle:hover { background: #333; }
+    .accordion-toggle .chevron {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .accordion-toggle.open .chevron { transform: rotate(180deg); }
+    .accordion-body {
+      display: none;
+      padding: 20px 0 0 0;
+    }
+    .accordion-body.open { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="background:white; padding:10px 20px; border-radius:15px; display:flex; align-items:center;">
+        <img src="../images/cn_logo.png" alt="Code Ninjas" class="logo">
+      </div>
+      <a href="../index.html" class="nav-btn" style="background:#E63946; color:#fff; box-shadow:0 4px 0 #a01f2a;">
+        <i class="bi bi-speedometer2 me-2"></i> DASHBOARD
+      </a>
+      <a href="shop.html" class="nav-btn" style="background:#FF9F1C; color:#000; box-shadow:0 4px 0 #d47e17;">
+        <i class="bi bi-cart4 me-2"></i> NINJA SHOP
+      </a>
+      <a href="belts.html" class="nav-btn" style="background:#2EC4B6; color:#000; box-shadow:0 4px 0 #21968b;">
+        <i class="bi bi-trophy me-2"></i> BELTS TOTEM
+      </a>
+      <a href="notm-archive.html" class="nav-btn" style="background:#6D5BBA; color:#fff; box-shadow:0 4px 0 #4a3d8a;">
+        <i class="bi bi-archive me-2"></i> NOTM ARCHIVE
+      </a>
+    </div>
+    <div style="font-family:'Bangers',cursive; color:var(--dojo-gold); font-size:2.5rem;" id="clock"></div>
+  </div>
+
+  <div style="max-width:1100px; margin:0 auto;">
+
+    <!-- How to Earn Accordion -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <button class="accordion-toggle" onclick="toggleEarn(this)">
+        How to Earn Ninja Bucks
+        <i class="bi bi-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-body" style="padding: 0 30px 20px 30px;">
+        <table class="earn-table" style="margin-top: 20px;">
+          <thead>
+            <tr>
+              <th>Achievement</th>
+              <th style="text-align:right;">Reward</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul>
+                  <li>Complete an Activity <em>(for IMPACT, only Build, Quest, and Adventure)</em></li>
+                  <li>Complete a Daily Activity Challenge</li>
+                  <li>Be Creative with your project and show Sensei <em>(for IMPACT, max 1 NB per Adventure project only)</em></li>
+                  <li>Publish a Community game and show Sensei <em>(max: 2 games per month)</em></li>
+                </ul>
+              </td>
+              <td>1 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Level up on IMPACT</li>
+                  <li>Get a Stripe</li>
+                </ul>
+              </td>
+              <td>2 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Belt up</li>
+                  <li>Complete a Boss Badge</li>
+                  <li>It is your Birthday</li>
+                  <li>Ninja of the Month</li>
+                </ul>
+              </td>
+              <td>5 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Follow the Rules of the Dojo</li>
+                </ul>
+              </td>
+              <td>up to 5 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Participate in a Game Jam <em>(game building competition)</em></li>
+                </ul>
+              </td>
+              <td>10 NB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="card card-gold">
+      <h2>🪙 Ninja Bucks Hall of Fame</h2>
+      <p class="subtitle">Celebrating our hardworking ninjas! Search for your name below.</p>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="bi bi-search"></i>
+        <input type="text" id="search" placeholder="Search ninja name..." oninput="filterTable()">
+      </div>
+
+      <!-- Sort -->
+      <div class="sort-btns">
+        <button class="sort-btn active" onclick="sortBy('name', this)">
+          <i class="bi bi-sort-alpha-down me-1"></i> Sort by Name
+        </button>
+        <button class="sort-btn" onclick="sortBy('bucks', this)">
+          <i class="bi bi-sort-numeric-down me-1"></i> Sort by Bucks
+        </button>
+      </div>
+
+      <div id="result-count"></div>
+
+      <!-- Registry Table -->
+      <div style="overflow-x:auto;">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th><i class="bi bi-person-fill me-1"></i> Ninja Name</th>
+              <th><i class="bi bi-coin me-1"></i> Current Balance</th>
+            </tr>
+          </thead>
+          <tbody id="ninja-tbody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+      <div id="no-results" class="no-results" style="display:none;">No ninjas found matching your search.</div>
+    </div>
+
+    <!-- Top Earners -->
+    <div class="card" style="box-shadow:10px 10px 0 #FF9F1C; border-color:#FF9F1C;">
+      <h2 style="color:#c07000;">🏆 Monthly Top Earners</h2>
+      <p style="color:var(--text-muted); margin-bottom:16px;">Top ninjas this month</p>
+      <div class="top-grid" id="top-earners">
+        <div class="empty-state">Add ninjas to see top earners!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Clock ──
+    function updateClock() {
+      document.getElementById('clock').innerText =
+        new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function toggleEarn(btn) {
+      btn.classList.toggle('open');
+      btn.nextElementSibling.classList.toggle('open');
+    }
+
+    // ── Ninja Data ──
+    // Add ninjas here: { name: "Name", bucks: 0 }
+    let ninjas = [
+      { name: "Alania B", bucks: 650 },
+      { name: "Amari G", bucks: 650 },
+      { name: "Arlo R", bucks: 650 },
+      { name: "Baokhoi N", bucks: 650 },
+      { name: "Cameron B", bucks: 650 },
+      { name: "Camryn F", bucks: 650 },
+      { name: "Dodge R", bucks: 650 },
+      { name: "Elijah J", bucks: 650 },
+      { name: "Emma C", bucks: 650 },
+      { name: "Ian E", bucks: 650 },
+      { name: "Jad R", bucks: 650 },
+      { name: "Jaycab S", bucks: 650 },
+      { name: "Jenna M", bucks: 650 },
+      { name: "Jezreel B", bucks: 650 },
+      { name: "Joseph F", bucks: 650 },
+      { name: "Kareem J", bucks: 650 },
+      { name: "Kayla C", bucks: 650 },
+      { name: "Kirin K", bucks: 650 },
+      { name: "Kwame S", bucks: 650 },
+      { name: "Leopold S", bucks: 650 },
+      { name: "Londyn E", bucks: 650 },
+      { name: "Luke R", bucks: 650 },
+      { name: "Maximus F", bucks: 650 },
+      { name: "Nina M", bucks: 650 },
+      { name: "Nnenna O", bucks: 650 },
+      { name: "Obi O", bucks: 650 },
+      { name: "Rainzie L", bucks: 650 },
+      { name: "Samantha M", bucks: 650 },
+      { name: "Seneca F", bucks: 650 },
+      { name: "Skylar L", bucks: 650 },
+      { name: "Tyson M", bucks: 650 },
+    ];
+
+    let currentSort = 'name';
+
+    function sortBy(field, btn) {
+      currentSort = field;
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    function getSorted() {
+      const q = document.getElementById('search').value.toLowerCase();
+      let filtered = ninjas.filter(n => n.name.toLowerCase().includes(q));
+      if (currentSort === 'name') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        filtered.sort((a, b) => b.bucks - a.bucks);
+      }
+      return filtered;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('ninja-tbody');
+      const sorted = getSorted();
+      const noResults = document.getElementById('no-results');
+      const countEl = document.getElementById('result-count');
+
+      if (ninjas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" class="no-results">No ninjas added yet — add some to get started!</td></tr>`;
+        noResults.style.display = 'none';
+        countEl.textContent = '';
+        return;
+      }
+
+      if (sorted.length === 0) {
+        tbody.innerHTML = '';
+        noResults.style.display = 'block';
+        countEl.textContent = '';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      countEl.textContent = `Showing ${sorted.length} of ${ninjas.length} ninjas`;
+
+      // For rank badges, always sort by bucks descending
+      const byBucks = [...ninjas].sort((a, b) => b.bucks - a.bucks);
+      const rankMap = {};
+      byBucks.forEach((n, i) => rankMap[n.name] = i + 1);
+
+      tbody.innerHTML = sorted.map((ninja, i) => {
+        const rank = rankMap[ninja.name];
+        const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        return `
+          <tr>
+            <td class="rank-cell ${rankClass}">${rankEmoji}</td>
+            <td class="name-cell">${ninja.name}</td>
+            <td class="balance-cell">🪙 ${ninja.bucks}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    function filterTable() { renderTable(); }
+
+    function renderTopEarners() {
+      const el = document.getElementById('top-earners');
+      if (ninjas.length === 0) {
+        el.innerHTML = '<div class="empty-state">Add ninjas to see top earners!</div>';
+        return;
+      }
+      const top = [...ninjas].sort((a, b) => b.bucks - a.bucks).slice(0, 5);
+      const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+      el.innerHTML = top.map((n, i) => `
+        <div class="top-card">
+          <div class="top-rank">${medals[i]}</div>
+          <div class="top-name">${n.name}</div>
+          <div class="top-bucks">🪙 ${n.bucks}</div>
+          <div class="top-label">Ninja Bucks</div>
+        </div>`).join('');
+    }
+
+    renderTable();
+    renderTopEarners();
+  </script>
+</body>
+</html>

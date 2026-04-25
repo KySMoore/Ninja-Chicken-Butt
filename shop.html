@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja Shop - Code Ninjas</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dojo-red: #E63946;
+      --dojo-black: #1a1a1a;
+      --dojo-gold: #FFD93D;
+      --dojo-gold-dark: #c9a500;
+      --dojo-orange: #FF9F1C;
+      --dojo-teal: #2EC4B6;
+      --dojo-purple: #6D5BBA;
+      --text-muted: #666;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #f0f0f0;
+      background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      color: var(--dojo-black);
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--dojo-black);
+      color: white;
+      border-bottom: 5px solid var(--dojo-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 15px 30px;
+    }
+
+    .logo { height: 50px; }
+
+    .nav-btn {
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      padding: 8px 20px;
+      transition: transform 0.15s;
+    }
+    .nav-btn:hover { transform: scale(1.05); }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border: 4px solid var(--dojo-black);
+      box-shadow: 10px 10px 0px var(--dojo-red);
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 0;
+    }
+
+    .card h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.2rem;
+      color: var(--dojo-red);
+      margin-bottom: 8px;
+    }
+
+    /* ── Section header ── */
+    .section-header {
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      color: white;
+      background: var(--dojo-black);
+      padding: 10px 20px;
+      margin: 0 -30px 24px -30px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Shop grid ── */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .shop-item {
+      border: 3px solid var(--dojo-black);
+      padding: 18px 14px;
+      text-align: center;
+      background: #fafafa;
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .shop-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 6px 6px 0 var(--dojo-red);
+    }
+
+    .shop-item.out-of-stock {
+      background: #f5f5f5;
+      opacity: 0.7;
+    }
+
+    .shop-item.out-of-stock:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .item-icon {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .item-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .item-price {
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      color: var(--dojo-red);
+      line-height: 1;
+    }
+
+    .item-price span {
+      font-size: 0.8rem;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .out-of-stock-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #1a1a1a;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 3px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Earn table ── */
+    .earn-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .earn-table thead tr {
+      background: var(--dojo-black);
+      color: white;
+      font-family: 'Bangers', cursive;
+      font-size: 1.1rem;
+    }
+    .earn-table th { padding: 12px 16px; text-align: left; }
+    .earn-table td { padding: 12px 16px; border-bottom: 2px solid #eee; vertical-align: top; }
+    .earn-table tr:last-child td { border-bottom: none; }
+    .earn-table td:last-child {
+      font-family: 'Bangers', cursive;
+      font-size: 1.4rem;
+      color: var(--dojo-red);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .earn-table ul { margin: 0; padding-left: 18px; }
+    .earn-table li { margin-bottom: 4px; }
+
+    .divider {
+      border: none;
+      border-top: 3px solid #eee;
+      margin: 28px 0;
+    }
+
+    /* ── Accordion ── */
+    .accordion-toggle {
+      width: 100%;
+      background: var(--dojo-black);
+      color: white;
+      font-family: 'Bangers', cursive;
+      font-size: 1.6rem;
+      padding: 14px 24px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.05em;
+      transition: background 0.2s;
+    }
+    .accordion-toggle:hover { background: #333; }
+    .accordion-toggle .chevron {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .accordion-toggle.open .chevron { transform: rotate(180deg); }
+    .accordion-body {
+      display: none;
+      padding: 20px 0 0 0;
+    }
+    .accordion-body.open { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="background:white; padding:10px 20px; border-radius:15px; display:flex; align-items:center;">
+        <img src="../images/cn_logo.png" alt="Code Ninjas" class="logo">
+      </div>
+      <a href="../index.html" class="nav-btn" style="background:#E63946; color:#fff; box-shadow:0 4px 0 #a01f2a;">
+        <i class="bi bi-speedometer2 me-2"></i> DASHBOARD
+      </a>
+      <a href="ninjabucks.html" class="nav-btn" style="background:#FFD93D; color:#000; box-shadow:0 4px 0 #c9a500;">
+        <i class="bi bi-coin me-2"></i> NINJA BUCKS
+      </a>
+      <a href="belts.html" class="nav-btn" style="background:#2EC4B6; color:#000; box-shadow:0 4px 0 #21968b;">
+        <i class="bi bi-trophy me-2"></i> BELTS TOTEM
+      </a>
+      <a href="notm-archive.html" class="nav-btn" style="background:#6D5BBA; color:#fff; box-shadow:0 4px 0 #4a3d8a;">
+        <i class="bi bi-archive me-2"></i> NOTM ARCHIVE
+      </a>
+    </div>
+    <div style="font-family:'Bangers',cursive; color:var(--dojo-gold); font-size:2.5rem;" id="clock"></div>
+  </div>
+
+  <div style="max-width:1200px; margin:0 auto;">
+
+    <!-- Page Title -->
+    <div class="card" style="box-shadow:10px 10px 0 var(--dojo-orange); border-color:var(--dojo-orange);">
+      <h2 style="color:var(--dojo-orange); font-size:3rem;">Ninja Shop</h2>
+      <p style="color:var(--text-muted); font-size:1.1rem; margin:0;">Spend your hard-earned Ninja Bucks here!</p>
+    </div>
+
+    <!-- How to Earn -->
+    <div class="card">
+      <button class="accordion-toggle" onclick="toggleEarn(this)">
+        How to Earn Ninja Bucks
+        <i class="bi bi-chevron-down chevron"></i>
+      </button>
+      <div class="accordion-body">
+        <table class="earn-table">
+          <thead>
+            <tr>
+              <th>Achievement</th>
+              <th style="text-align:right;">Reward</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul>
+                  <li>Complete an Activity <em>(for IMPACT, only Build, Quest, and Adventure)</em></li>
+                  <li>Complete a Daily Activity Challenge</li>
+                  <li>Be Creative with your project and show Sensei <em>(for IMPACT, max 1 NB per Adventure project only)</em></li>
+                  <li>Publish a Community game and show Sensei <em>(max: 2 games per month)</em></li>
+                </ul>
+              </td>
+              <td>1 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Level up on IMPACT</li>
+                  <li>Get a Stripe</li>
+                </ul>
+              </td>
+              <td>2 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Belt up</li>
+                  <li>Complete a Boss Badge</li>
+                  <li>It is your Birthday</li>
+                  <li>Ninja of the Month</li>
+                </ul>
+              </td>
+              <td>5 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Follow the Rules of the Dojo</li>
+                </ul>
+              </td>
+              <td>up to 5 NB</td>
+            </tr>
+            <tr>
+              <td>
+                <ul>
+                  <li>Participate in a Game Jam <em>(game building competition)</em></li>
+                </ul>
+              </td>
+              <td>10 NB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Dojo Rewards -->
+    <div class="card">
+      <div class="section-header">Dojo Rewards</div>
+      <div class="shop-grid">
+
+        <div class="shop-item">
+
+          <div class="item-name">Free Time during Daily Activity</div>
+          <div class="item-price">15<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Wristband Charm</div>
+          <div class="item-price">15<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Bring a Friend for a Free Session</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Free Game Night</div>
+          <div class="item-price">50<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Pie a Sensei</div>
+          <div class="item-price">50<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Custom T-Shirt</div>
+          <div class="item-price">100<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Free PD Day Camp</div>
+          <div class="item-price">200<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Free Half-Day Summer Camp</div>
+          <div class="item-price">800<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">$100 GameStop Gift Card</div>
+          <div class="item-price">800<span>Ninja Bucks</span></div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+
+      <!-- Canteen -->
+      <div class="section-header" style="margin-top:0;">Front Lobby Canteen</div>
+      <div class="shop-grid">
+
+        <div class="shop-item">
+
+          <div class="item-name">Tootsie Rolls</div>
+          <div class="item-price">5<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Sugar Sticks</div>
+          <div class="item-price">5<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Suckers</div>
+          <div class="item-price">5<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Wagon Wheel</div>
+          <div class="item-price">20<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Popeye Candy Sticks</div>
+          <div class="item-price">20<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Candy Hearts</div>
+          <div class="item-price">20<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Cookie Bag</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">Juicebox / Kool-aid</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Chocolate Bar</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Smarties Box</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Chips</div>
+          <div class="item-price">25<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Soda</div>
+          <div class="item-price">40<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Candy Bag</div>
+          <div class="item-price">40<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Small 3D Print (choose from shelf)</div>
+          <div class="item-price">50<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item">
+
+          <div class="item-name">3D Printed Ninja Baby</div>
+          <div class="item-price">50<span>Ninja Bucks</span></div>
+        </div>
+
+        <div class="shop-item out-of-stock">
+          <span class="out-of-stock-badge">Out of Stock</span>
+
+          <div class="item-name">Large 3D Print (choose from shelf)</div>
+          <div class="item-price">100<span>Ninja Bucks</span></div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+
+  <script>
+    function updateClock() {
+      document.getElementById('clock').innerText =
+        new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function toggleEarn(btn) {
+      btn.classList.toggle('open');
+      btn.nextElementSibling.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOTM Archive - Code Ninjas</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/css2.css">
+  <style>
+    :root {
+      --dojo-red: #E63946;
+      --dojo-black: #1a1a1a;
+      --dojo-gold: #FFD93D;
+      --dojo-gold-dark: #c9a500;
+      --dojo-purple: #6D5BBA;
+      --text-muted: #666;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #f0f0f0;
+      background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      color: var(--dojo-black);
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--dojo-black);
+      color: white;
+      border-bottom: 5px solid var(--dojo-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 15px 30px;
+    }
+    .logo { height: 50px; }
+    .nav-btn {
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      padding: 8px 20px;
+      transition: transform 0.15s;
+    }
+    .nav-btn:hover { transform: scale(1.05); }
+
+    /* ── Page wrapper ── */
+    .page-wrap { max-width: 1100px; margin: 0 auto; }
+
+    /* ── Title card ── */
+    .title-card {
+      background: white;
+      border: 4px solid var(--dojo-black);
+      box-shadow: 10px 10px 0 var(--dojo-purple);
+      padding: 24px 30px;
+      margin-bottom: 30px;
+    }
+    .title-card h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 3rem;
+      color: var(--dojo-purple);
+      margin: 0 0 4px 0;
+    }
+    .title-card p { color: var(--text-muted); margin: 0; }
+
+    /* ── Month card ── */
+    .month-card {
+      background: white;
+      border: 4px solid var(--dojo-black);
+      box-shadow: 10px 10px 0 var(--dojo-red);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .month-header {
+      background: var(--dojo-black);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .month-header h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2rem;
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
+    .month-date {
+      font-size: 0.82rem;
+      opacity: 0.6;
+      font-style: italic;
+    }
+
+    /* ── Ninja grid ── */
+    .ninja-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .ninja-card {
+      text-align: center;
+    }
+
+    .ninja-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border: 3px solid var(--dojo-black);
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+    .ninja-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+      line-height: 1.2;
+    }
+
+    .ninja-badge {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="background:white; padding:10px 20px; border-radius:15px; display:flex; align-items:center;">
+        <img src="../images/cn_logo.png" alt="Code Ninjas" class="logo">
+      </div>
+      <a href="../index.html" class="nav-btn" style="background:#E63946; color:#fff; box-shadow:0 4px 0 #a01f2a;">
+        <i class="bi bi-speedometer2 me-2"></i> DASHBOARD
+      </a>
+      <a href="ninjabucks.html" class="nav-btn" style="background:#FFD93D; color:#000; box-shadow:0 4px 0 #c9a500;">
+        <i class="bi bi-coin me-2"></i> NINJA BUCKS
+      </a>
+      <a href="shop.html" class="nav-btn" style="background:#FF9F1C; color:#000; box-shadow:0 4px 0 #d47e17;">
+        <i class="bi bi-cart4 me-2"></i> NINJA SHOP
+      </a>
+      <a href="belts.html" class="nav-btn" style="background:#2EC4B6; color:#000; box-shadow:0 4px 0 #21968b;">
+        <i class="bi bi-trophy me-2"></i> BELTS TOTEM
+      </a>
+    </div>
+    <div style="font-family:'Bangers',cursive; color:var(--dojo-gold); font-size:2.5rem;" id="clock"></div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- Title -->
+    <div class="title-card">
+      <h1>Ninja of the Month Archive</h1>
+      <p>Celebrating our outstanding Ninjas throughout the year!</p>
+    </div>
+
+    <!-- APRIL -->
+    <div class="month-card" style="box-shadow:10px 10px 0 var(--dojo-gold-dark); border-color:var(--dojo-gold-dark);">
+      <div class="month-header" style="background:#a07800;">
+        <h2>April 2026</h2>
+        <span class="month-date">Apr 24, 2026</span>
+      </div>
+      <div class="ninja-grid">
+
+        <div class="ninja-card">
+          <img src="../images/surprise_ninja.png" alt="surprise ninja">
+          <div class="ninja-name">Vlad R.</div>
+          <div class="ninja-badge">Surprise Ninja</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/focused.png" alt="focused">
+          <div class="ninja-name">Mahnoor M.</div>
+          <div class="ninja-badge">Focused</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/helpful.png" alt="helpful">
+          <div class="ninja-name">Ali M.</div>
+          <div class="ninja-badge">Helpful</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/challenge.png" alt="challenge">
+          <div class="ninja-name">Daniel K.</div>
+          <div class="ninja-badge">Challenge</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/scholar.png" alt="scholar">
+          <div class="ninja-name">Kaden P.</div>
+          <div class="ninja-badge">Scholar</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/creative.png" alt="creative">
+          <div class="ninja-name">Conner M.</div>
+          <div class="ninja-badge">Creative</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/collector.png" alt="collector">
+          <div class="ninja-name">Ahaan A.</div>
+          <div class="ninja-badge">Collector</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/skillful.png" alt="skillful">
+          <div class="ninja-name">Kaia M.D.</div>
+          <div class="ninja-badge">Skillful</div>
+        </div>
+
+        <div class="ninja-card">
+          <img src="../images/friendly.png" alt="friendly">
+          <div class="ninja-name">Rafa M.</div>
+          <div class="ninja-badge">Friendly</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <script>
+    function updateClock() {
+      document.getElementById('clock').innerText =
+        new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>

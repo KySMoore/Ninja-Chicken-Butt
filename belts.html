@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belts Totem - Code Ninjas</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dojo-red: #E63946;
+      --dojo-black: #1a1a1a;
+      --dojo-gold: #FFD93D;
+      --dojo-gold-dark: #c9a500;
+      --text-muted: #666;
+
+      /* Belt colours */
+      --belt-white:  #f5f5f5;
+      --belt-yellow: #FFD93D;
+      --belt-orange: #FF9F1C;
+      --belt-green:  #4CAF50;
+      --belt-blue:   #2196F3;
+      --belt-purple: #9C27B0;
+      --belt-brown:  #795548;
+      --belt-red:    #E63946;
+      --belt-black:  #1a1a1a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #f0f0f0;
+      background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      color: var(--dojo-black);
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--dojo-black);
+      color: white;
+      border-bottom: 5px solid var(--dojo-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 15px 30px;
+    }
+    .logo { height: 50px; }
+    .nav-btn {
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Bangers', cursive;
+      font-size: 1rem;
+      padding: 8px 20px;
+      transition: transform 0.15s;
+    }
+    .nav-btn:hover { transform: scale(1.05); }
+
+    /* ── Page title card ── */
+    .title-card {
+      background: white;
+      border: 4px solid var(--dojo-black);
+      box-shadow: 10px 10px 0 var(--dojo-red);
+      padding: 24px 30px;
+      margin-bottom: 30px;
+    }
+    .title-card h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 3rem;
+      color: var(--dojo-red);
+      margin: 0 0 4px 0;
+    }
+    .title-card p { color: var(--text-muted); margin: 0; font-size: 1rem; }
+
+    /* ── Totem horizontal scroll container ── */
+    .totem-scroll {
+      overflow-x: auto;
+      padding-bottom: 16px;
+    }
+
+    .totem {
+      display: flex;
+      gap: 0;
+      min-width: max-content;
+      border: 4px solid var(--dojo-black);
+      box-shadow: 10px 10px 0 #000;
+    }
+
+    /* ── Belt column ── */
+    .belt-section {
+      display: flex;
+      flex-direction: column;
+      width: 180px;
+      flex-shrink: 0;
+      border-right: 4px solid var(--dojo-black);
+    }
+    .belt-section:last-child { border-right: none; }
+
+    /* ── Belt header (top of each column) ── */
+    .belt-header {
+      padding: 14px 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .belt-swatch {
+      width: 50px;
+      height: 12px;
+      border: 2px solid rgba(0,0,0,0.25);
+    }
+
+    .belt-title {
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .belt-count {
+      font-family: 'Bangers', cursive;
+      font-size: 0.95rem;
+      opacity: 0.75;
+    }
+
+    /* ── Belt body (ninja lists below header) ── */
+    .belt-body {
+      flex: 1;
+      background: white;
+      border-top: 3px solid rgba(0,0,0,0.15);
+      padding: 12px 10px;
+    }
+
+    /* ── Degree sections inside each column ── */
+    .degree-col { margin-bottom: 14px; }
+    .degree-col:last-child { margin-bottom: 0; }
+
+    .degree-col h4 {
+      font-family: 'Bangers', cursive;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 2px solid #eee;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .ninja-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .ninja-list li {
+      padding: 3px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .ninja-list li:last-child { border-bottom: none; }
+
+    .coming-soon {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.78rem;
+      padding: 4px 0;
+    }
+
+    /* ── Belt-specific colours ── */
+    .belt-white  .belt-header { background: var(--belt-white); color: #333; }
+    .belt-yellow .belt-header { background: var(--belt-yellow); color: #333; }
+    .belt-orange .belt-header { background: var(--belt-orange); color: #fff; }
+    .belt-green  .belt-header { background: var(--belt-green);  color: #fff; }
+    .belt-blue   .belt-header { background: var(--belt-blue);   color: #fff; }
+    .belt-purple .belt-header { background: var(--belt-purple); color: #fff; }
+    .belt-brown  .belt-header { background: var(--belt-brown);  color: #fff; }
+    .belt-red    .belt-header { background: var(--belt-red);    color: #fff; }
+    .belt-black  .belt-header { background: var(--belt-black);  color: #fff; }
+
+    .belt-white  .belt-swatch { background: #fff; }
+    .belt-yellow .belt-swatch { background: var(--belt-yellow); }
+    .belt-orange .belt-swatch { background: var(--belt-orange); }
+    .belt-green  .belt-swatch { background: var(--belt-green);  }
+    .belt-blue   .belt-swatch { background: var(--belt-blue);   }
+    .belt-purple .belt-swatch { background: var(--belt-purple); }
+    .belt-brown  .belt-swatch { background: var(--belt-brown);  }
+    .belt-red    .belt-swatch { background: var(--belt-red);    }
+    .belt-black  .belt-swatch { background: #333; border-color: #555; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div style="background:white; padding:10px 20px; border-radius:15px; display:flex; align-items:center;">
+        <img src="../images/cn_logo.png" alt="Code Ninjas" class="logo">
+      </div>
+      <a href="../index.html" class="nav-btn" style="background:#E63946; color:#fff; box-shadow:0 4px 0 #a01f2a;">
+        <i class="bi bi-speedometer2 me-2"></i> DASHBOARD
+      </a>
+      <a href="ninjabucks.html" class="nav-btn" style="background:#FFD93D; color:#000; box-shadow:0 4px 0 #c9a500;">
+        <i class="bi bi-coin me-2"></i> NINJA BUCKS
+      </a>
+      <a href="shop.html" class="nav-btn" style="background:#FF9F1C; color:#000; box-shadow:0 4px 0 #d47e17;">
+        <i class="bi bi-cart4 me-2"></i> NINJA SHOP
+      </a>
+      <a href="notm-archive.html" class="nav-btn" style="background:#6D5BBA; color:#fff; box-shadow:0 4px 0 #4a3d8a;">
+        <i class="bi bi-archive me-2"></i> NOTM ARCHIVE
+      </a>
+    </div>
+    <div style="font-family:'Bangers',cursive; color:var(--dojo-gold); font-size:2.5rem;" id="clock"></div>
+  </div>
+
+  <div style="max-width:1100px; margin:0 auto;">
+
+    <!-- Title -->
+    <div class="title-card">
+      <h1>Belts Totem</h1>
+      <p>Celebrating the progress of all our Ninjas!</p>
+    </div>
+
+    <!-- Horizontal Totem -->
+    <div class="totem-scroll">
+      <div class="totem">
+
+        <!-- WHITE BELT -->
+        <div class="belt-section belt-white" id="belt-white">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">White Belt</div>
+            <div class="belt-count" id="count-white"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="white-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- YELLOW BELT -->
+        <div class="belt-section belt-yellow" id="belt-yellow">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Yellow Belt</div>
+            <div class="belt-count" id="count-yellow"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="yellow-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- ORANGE BELT -->
+        <div class="belt-section belt-orange" id="belt-orange">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Orange Belt</div>
+            <div class="belt-count" id="count-orange"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="orange-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- GREEN BELT -->
+        <div class="belt-section belt-green" id="belt-green">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Green Belt</div>
+            <div class="belt-count" id="count-green"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="green-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- BLUE BELT -->
+        <div class="belt-section belt-blue" id="belt-blue">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Blue Belt</div>
+            <div class="belt-count" id="count-blue"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="blue-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- PURPLE BELT -->
+        <div class="belt-section belt-purple" id="belt-purple">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Purple Belt</div>
+            <div class="belt-count" id="count-purple"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="purple-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- BROWN BELT -->
+        <div class="belt-section belt-brown" id="belt-brown">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Brown Belt</div>
+            <div class="belt-count" id="count-brown"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="brown-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- RED BELT -->
+        <div class="belt-section belt-red" id="belt-red">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Red Belt</div>
+            <div class="belt-count" id="count-red"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="red-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+        <!-- BLACK BELT -->
+        <div class="belt-section belt-black" id="belt-black">
+          <div class="belt-header">
+            <div class="belt-swatch"></div>
+            <div class="belt-title">Black Belt</div>
+            <div class="belt-count" id="count-black"></div>
+          </div>
+          <div class="belt-body">
+            <ul class="ninja-list" id="black-1"><li class="coming-soon">No ninjas yet</li></ul>
+          </div>
+        </div>
+
+      </div><!-- /totem -->
+    </div><!-- /totem-scroll -->
+
+  </div><!-- /max-width wrapper -->
+
+  <script>
+    // ── Clock ──
+    function updateClock() {
+      document.getElementById('clock').innerText =
+        new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── Ninja Data ──────────────────────────────────────────────
+    // To add ninjas, edit the arrays below.
+    // Format: { name: "First Last", degree: 1 }   (degree: 1, 2, or 3)
+    // For Purple/Brown/Red/Black just use degree: 1 (Current Level)
+
+    const belts = {
+      white:  { ninjas: [
+        { name: "Alania B" },
+        { name: "Amari G" },
+        { name: "Arlo R" },
+        { name: "Cameron B" },
+        { name: "Camryn F" },
+        { name: "Dodge R" },
+        { name: "Elijah J" },
+        { name: "Jad R" },
+        { name: "Jenna M" },
+        { name: "Kareem J" },
+        { name: "Kirin K" },
+        { name: "Kwame S" },
+        { name: "Londyn E" },
+        { name: "Luke R" },
+        { name: "Maximus F" },
+        { name: "Nina M" },
+        { name: "Obi O" },
+        { name: "Samantha M" },
+        { name: "Seneca F" },
+        { name: "Tyson M" },
+      ]},
+      yellow: { ninjas: [
+        { name: "Ian E" },
+        { name: "Jaycab S" },
+        { name: "Jezreel B" },
+        { name: "Joseph F" },
+        { name: "Kayla C" },
+        { name: "Leopold S" },
+        { name: "Nnenna O" },
+        { name: "Rainzie L" },
+        { name: "Skylar L" },
+      ]},
+      orange: { ninjas: [
+		{ name: "Emma C" },
+        { name: "Baokhoi N" },
+      ]},
+      green:  { ninjas: [] },
+      blue:   { ninjas: [] },
+      purple: { ninjas: [] },
+      brown:  { ninjas: [] },
+      red:    { ninjas: [] },
+      black:  { ninjas: [] },
+    };
+
+    function renderBelts() {
+      Object.entries(belts).forEach(([color, data]) => {
+        const listEl = document.getElementById(`${color}-1`);
+        const countEl = document.getElementById(`count-${color}`);
+        const sorted = [...data.ninjas].sort((a, b) => a.name.localeCompare(b.name));
+        if (listEl) {
+          listEl.innerHTML = sorted.length === 0
+            ? '<li class="coming-soon">No ninjas yet</li>'
+            : sorted.map(n => `<li>${n.name}</li>`).join('');
+        }
+        if (countEl) countEl.textContent = sorted.length > 0 ? `${sorted.length} Ninja${sorted.length !== 1 ? 's' : ''}` : '';
+      });
+    }
+
+    renderBelts();
+  </script>
+</body>
+</html>
